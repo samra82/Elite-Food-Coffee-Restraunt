@@ -4,7 +4,6 @@ import { FaCheck } from 'react-icons/fa6'
 import FoodCategory from '../components/FoodCategory'
 import { FaPizzaSlice, FaHamburger, FaUtensils } from "react-icons/fa"; 
 import { GiChefToque } from "react-icons/gi";
-import Footer from '@/components/Footer';
 import RestaurantNavbar from '@/components/RestaurantNavbar';
 import MeetChef from '@/components/MeetChef';
 
@@ -153,7 +152,6 @@ function HomePage() {
     </section>
      <MeetChef />
     <FoodCategory/>
-    <Footer/>
     </>
   )
 }
