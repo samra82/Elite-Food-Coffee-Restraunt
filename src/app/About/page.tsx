@@ -1,6 +1,6 @@
-import AboutHero from '@/components/AboutHero'
-import Aboutus from '@/components/AboutUs'
 import React from 'react'
+import AboutHero from '@/components/AboutPages/AboutHero'
+import Aboutus from '@/components/AboutPages/AboutUs'
 
 const About = () => {
   return (

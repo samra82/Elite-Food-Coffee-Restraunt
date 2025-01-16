@@ -1,111 +1,99 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { AiOutlineUser } from "react-icons/ai";
-import { HiOutlineShoppingBag } from "react-icons/hi";
-import { IoSearchOutline } from "react-icons/io5";
-import { FiMenu, FiX } from "react-icons/fi";
-const Navbar: React.FC = () => {
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+import { useState } from 'react'
+import Link from "next/link"
+import { Menu, X, Search, ShoppingCart, User } from 'lucide-react'
+import { Button } from './ui/button';
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!isMobileMenuOpen);
-  };
+export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const menuItems = [
+    { name: "Home", href: "/", active: true },
+    { name: "Menu", href: "/menu"},
+    { name: "Blog", href: "/blog" },
+    { name: "Pages", href: "/pages" },
+    { name: "About", href: "/about" },
+    { name: "Shop", href: "/shop" },
+    { name: "Contact", href: "/contact" },
+  ]
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   return (
-  
-      <div className="container mx-auto flex  justify-around items-center bg-black text-white ">
-        
-
-        {/* Navigation */}
-        <nav
-          className={`${
-            isMobileMenuOpen ? "block" : "hidden"
-          } absolute top-16 left-0 w-full bg-black md:static md:w-auto md:flex`}
+    <header className="z-50 w-full bg-[#0D0D0D] sticky top-0 px-4 sm:px-6 lg:px-[15.62%] py-4 lg:py-7">
+      <nav className="flex items-center justify-between relative">
+        {/* Logo */}
+        <Link
+          href="/src/app/favicon.ico"
+          className="text-[20px] sm:text-[24px] leading-[32px] font-bold text-white z-50"
         >
-          {/* Logo */}
-        <div className="flex items-center justify-between w-full pr-24">
-                <span className="text-yellow-500 font-bold text-lg flex-grow text-center">
-                    Food<span className="text-white">tuck</span>
-                </span>
+          Food<span className="text-[#FF9F0D]">tuck</span>
+        </Link>
+
+        {/* Mobile Menu Toggle */}
+        <Button
+          variant="ghost"
+          className="lg:hidden hover:text-white text-white z-50"
+          onClick={toggleMenu}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </Button>
+
+        {/* Navigation Links */}
+        <div className={`
+          fixed inset-0 bg-[#0D0D0D] flex flex-col items-center justify-center gap-6
+          lg:static lg:flex-row lg:bg-transparent lg:gap-[32px]
+          transition-all duration-300 ease-in-out
+          ${isMenuOpen 
+            ? 'opacity-100 visible translate-x-0' 
+            : 'opacity-0 invisible translate-x-full lg:translate-x-0 lg:opacity-100 lg:visible'}
+          absolute top-0 left-0 w-full h-screen lg:h-auto
+        `}>
+          <ul className="flex flex-col lg:flex-row items-center gap-6 lg:gap-[32px]">
+            {menuItems.map((item) => (
+              <li key={item.name} className="w-full lg:w-auto text-center">
+                <Link
+                  href={item.href}
+                  className={`block w-full lg:w-auto text-[16px] leading-6 ${
+                    item.active ? "text-[#FF9F0D] font-bold" : "text-white"
+                  } font-inter hover:text-[#FF9F0D] transition-colors`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* Mobile Icons */}
+          <div className="lg:hidden flex items-center gap-4 mt-6">
+            <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
+              <Search size={24} />
+            </Link>
+            <Link href="/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
+              <User size={24} />
+            </Link>
+            <Link href="/cart" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Shopping Cart">
+              <ShoppingCart size={24} />
+            </Link>
+          </div>
         </div>
 
-        {/* Hamburger menu (visible only on small screens) */}
-        <button
-          className="text-2xl md:hidden"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle Menu"
-        >
-          {isMobileMenuOpen ? <FiX /> : <FiMenu />}
-        </button>
-          <ul className="flex flex-col md:flex-row md:space-x-4">
-            <li>
-              <Link
-                href="/"
-                className=" font-bold block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/Menu"
-                className="block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                Menu
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/BlogPage"
-                className="block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                Blog
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/FAQPage"
-                className="block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                Pages
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/About"
-                className="block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                About
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/ShopList"
-                className="block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                Shop
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/Contact"
-                className="block px-4 py-2 transition duration-300 hover:text-yellow-500 "
-              >
-                Contact
-              </Link>
-            </li>
-          </ul>
-           {/* Icons */}
-        <div className="hidden md:flex space-x-4 items-center pl-24">
-          <IoSearchOutline className="text-xl cursor-pointer" />
-          <AiOutlineUser className="text-xl cursor-pointer" />
-          <Link href={"/ShopList"}><HiOutlineShoppingBag className="text-xl cursor-pointer" /></Link>
-        </div>  
-        </nav>
-    </div>
-  );
-};
-
-export default Navbar;
+        {/* Desktop Icons */}
+        <div className="hidden lg:flex items-center gap-4">
+          <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
+            <Search size={24} />
+          </Link>
+          <Link href="/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
+            <User size={24} />
+          </Link>
+          <Link href="/cart" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Shopping Cart">
+            <ShoppingCart size={24} />
+          </Link>
+        </div>
+      </nav>
+    </header>
+  )
+}
