@@ -10,8 +10,10 @@ Check out the live demo of the project: [Food Tuck Restaurant](https://elite-foo
 ---
 
 ## 📸 Preview
-![Beige Modern New Product Facebook Post (4)](https://github.com/user-attachments/assets/56e6fc4d-19c4-49cd-a778-25e2fb16974f)
-![Beige Modern New Product Facebook Post (3)](https://github.com/user-attachments/assets/c44b58dc-753c-4494-8d5b-ac3a65da78d4)
+
+<img src="https://github.com/user-attachments/assets/56e6fc4d-19c4-49cd-a778-25e2fb16974f" width="500" height="400">
+<img src="https://github.com/user-attachments/assets/c44b58dc-753c-4494-8d5b-ac3a65da78d4" width="500" height="400">
+
 
 ---
 
