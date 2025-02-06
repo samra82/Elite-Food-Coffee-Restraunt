@@ -1,29 +1,36 @@
-# Food Tuck Restaurant 🍔
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Welcome to **Food Tuck Restaurant**, where flavor meets convenience! Our passion is serving delicious, high-quality meals on the go, ensuring every bite is a delightful experience. Founded by Riaz Hussain, we bring a unique twist to traditional dishes, making us the perfect choice for food lovers everywhere.
+## Getting Started
 
----
+First, run the development server:
 
-## 🚀 Live Demo
-Check out the live demo of the project: [Food Tuck Restaurant](https://elite-food-coffee-restraunt.vercel.app/)
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 📸 Preview
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-<img src="https://github.com/user-attachments/assets/56e6fc4d-19c4-49cd-a778-25e2fb16974f" width="500" height="400">
-<img src="https://github.com/user-attachments/assets/c44b58dc-753c-4494-8d5b-ac3a65da78d4" width="500" height="400">
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Learn More
 
----
+To learn more about Next.js, take a look at the following resources:
 
-## ✨ Features
-- **Dynamic Menu:** Fetch and display menu items from Sanity CMS.
-- **Responsive Design:** Optimized for all devices.
-- **Mock API Integration:** Test cart, orders, and shipping functionality.
-- **Interactive UI:** Add-to-cart, checkout, and shipping calculator.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
----
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## 🛠️ Technologies Used
-- **Frontend:** Next.js, Tailwind 
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

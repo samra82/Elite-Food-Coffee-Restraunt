@@ -1,9 +1,23 @@
-"use client"
+'use client';
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
 
-const DescriptionComponent = () => {
+interface Review {
+  reviewer: string;
+  comment: string;
+  rating: number;
+  date: string;
+}
+
+interface DescriptionComponentProps {
+  description: string;
+  reviews?: Review[]; // Add reviews prop
+}
+
+const DescriptionComponent: React.FC<DescriptionComponentProps> = ({ description, reviews }) => {
   const [activeTab, setActiveTab] = useState('description');
 
   const keyBenefits = [
@@ -11,7 +25,7 @@ const DescriptionComponent = () => {
     'Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.',
     'Suspendisse potenti. Morbi in ipsum sit amet pede facilisis laoreet.',
     'Maecenas fermentum consequat mi. Donec fermentum. Pellentesque ligula.',
-    'Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede.'
+    'Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede.',
   ];
 
   return (
@@ -21,8 +35,8 @@ const DescriptionComponent = () => {
           <Button
             onClick={() => setActiveTab('description')}
             className={`${
-              activeTab === 'description' 
-                ? 'bg-[#FF9F0D] hover:bg-[#FF9F0D]/90' 
+              activeTab === 'description'
+                ? 'bg-[#FF9F0D] hover:bg-[#FF9F0D]/90'
                 : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
             } transition-colors duration-200 min-w-[165px] h-12 font-semibold rounded-lg`}
           >
@@ -31,12 +45,12 @@ const DescriptionComponent = () => {
           <Button
             onClick={() => setActiveTab('reviews')}
             className={`${
-              activeTab === 'reviews' 
-                ? 'bg-[#FF9F0D] hover:bg-[#FF9F0D]/90' 
+              activeTab === 'reviews'
+                ? 'bg-[#FF9F0D] hover:bg-[#FF9F0D]/90'
                 : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
             } transition-colors duration-200 min-w-[165px] h-12 font-semibold rounded-lg`}
           >
-            Reviews (24)
+            Reviews ({reviews?.length || 0})
           </Button>
         </div>
 
@@ -48,18 +62,7 @@ const DescriptionComponent = () => {
               transition={{ duration: 0.3 }}
               className="space-y-6"
             >
-              <p className="text-gray-600 leading-relaxed">
-                Nam tristique porta ligula, vel viverra sem eleifend nec. Nulla sed purus augue, 
-                eu euismod tellus. Nam mattis eros nec mi sagittis sagittis. Vestibulum suscipit 
-                cursus bibendum. Integer at justo eget sem auctor auctor eget vitae arcu. Nam tempor 
-                malesuada porttitor.
-              </p>
-              
-              <p className="text-gray-600 leading-relaxed">
-                Suspendisse cursus sodales placerat. Morbi eu lacinia ex. Curabitur blandit justo 
-                urna, id porttitor est dignissim nec. Pellentesque scelerisque hendrerit posuere. 
-                Sed at dolor quis nisi rutrum accumsan et sagittis massa.
-              </p>
+              <p className="text-gray-600 leading-relaxed">{description}</p>
 
               <div className="pt-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Key Benefits</h3>
@@ -78,9 +81,25 @@ const DescriptionComponent = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="h-64 flex items-center justify-center"
+              className="space-y-6"
             >
-              <p className="text-gray-500">Review content would go here</p>
+              {reviews?.map((review, index) => (
+                <div key={index} className="border-b pb-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-gray-800">{review.reviewer}</h4>
+                    <span className="text-sm text-gray-500">{new Date(review.date).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center gap-1 mt-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${i < review.rating ? 'text-[#FF9F0D]' : 'text-gray-300'}`}
+                      />
+                    ))}
+                  </div>
+                  <p className="mt-2 text-gray-600">{review.comment}</p>
+                </div>
+              ))}
             </motion.div>
           )}
         </div>

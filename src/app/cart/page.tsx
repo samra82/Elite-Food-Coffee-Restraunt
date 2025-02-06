@@ -3,11 +3,9 @@ import Herocart from './Herocart'
 import ShoppingCart from './ShopingCart';
 
 const CartPage = () => {
-  return (
-    <div>
+  return (<>
         <Herocart />
-        <ShoppingCart />
-    </div>
+        <ShoppingCart /></>
   )
 }
 

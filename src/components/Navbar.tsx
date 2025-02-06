@@ -1,24 +1,26 @@
+// components/Navbar.tsx
 'use client';
 
-import { useState } from 'react'
-import Link from "next/link"
-import { Menu, X, Search, ShoppingCart, User } from 'lucide-react'
+import { useState } from 'react';
+import Link from 'next/link';
+import { Menu, X, Search, User } from 'lucide-react';
 import { Button } from './ui/button';
+import CartButton from './cart/CartButton';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
     { name: "Home", href: "/", active: true },
-    { name: "Menu", href: "/menu"},
+    { name: "Menu", href: "/menu" },
     { name: "Blog", href: "/blog" },
     { name: "Pages", href: "/pages" },
     { name: "About", href: "/about" },
     { name: "Shop", href: "/shop" },
     { name: "Contact", href: "/contact" },
-  ]
+  ];
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <header className="z-50 w-full bg-[#0D0D0D] sticky top-0 px-4 sm:px-6 lg:px-[15.62%] py-4 lg:py-7">
@@ -72,12 +74,10 @@ export default function Navbar() {
             <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
               <Search size={24} />
             </Link>
-            <Link href="/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
+            <Link href="Auth/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
               <User size={24} />
             </Link>
-            <Link href="/cart" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Shopping Cart">
-              <ShoppingCart size={24} />
-            </Link>
+            <CartButton />
           </div>
         </div>
 
@@ -86,14 +86,12 @@ export default function Navbar() {
           <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
             <Search size={24} />
           </Link>
-          <Link href="/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
+          <Link href="/Auth/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
             <User size={24} />
           </Link>
-          <Link href="/cart" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Shopping Cart">
-            <ShoppingCart size={24} />
-          </Link>
+          <CartButton />
         </div>
       </nav>
     </header>
-  )
+  );
 }

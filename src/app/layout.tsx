@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer/Footer";
+import Providers from "./Redux Provider";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -16,7 +17,8 @@ const geistMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   title: "Food Tuck Restaurant",
-  description: "Welcome to Food Tuck Restaurant, where flavor meets convenience! Our passion is serving delicious, high-quality meals on the go, ensuring every bite is a delightful experience. Founded by Riaz Hussain, we bring a unique twist to traditional dishes, making us the perfect choice for food lovers everywhere.",
+  description:
+    "Welcome to Food Tuck Restaurant, where flavor meets convenience!",
 };
 
 export default function RootLayout({
@@ -29,8 +31,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
         <Footer />
       </body>
     </html>

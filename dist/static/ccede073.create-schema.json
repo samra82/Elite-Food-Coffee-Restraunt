@@ -1,0 +1,266 @@
+[
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "title": "Food Name"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "A unique URL-friendly identifier for the food item.",
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "description": "Category of the food item (e.g., Burger, Sandwich, Drink, etc.)",
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "name": "price",
+        "type": "number",
+        "title": "Current Price"
+      },
+      {
+        "description": "Price before discount (if any)",
+        "name": "originalPrice",
+        "type": "number"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "description": "Tags for categorization (e.g., Best Seller, Popular, New)",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "Food Image"
+      },
+      {
+        "description": "Short description of the food item",
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "description": "Availability status of the food item",
+        "name": "available",
+        "type": "boolean"
+      },
+      {
+        "description": "Reference to other food items that are related",
+        "of": [
+          {
+            "to": [
+              {
+                "type": "food"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to food"
+          }
+        ],
+        "name": "relatedProducts",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              },
+              {
+                "flag": "max",
+                "constraint": 5
+              },
+              {
+                "flag": "precision",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Rating out of 5",
+        "name": "rating",
+        "type": "number"
+      },
+      {
+        "description": "User reviews for this food item",
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "reviewer",
+                "type": "string",
+                "title": "Reviewer Name"
+              },
+              {
+                "description": "User review comment",
+                "name": "comment",
+                "type": "text"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "min",
+                        "constraint": 0
+                      },
+                      {
+                        "flag": "max",
+                        "constraint": 5
+                      },
+                      {
+                        "flag": "precision",
+                        "constraint": 1
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Rating given by the reviewer (out of 5)",
+                "name": "rating",
+                "type": "number"
+              },
+              {
+                "description": "Date of the review",
+                "name": "date",
+                "type": "datetime"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "reviews",
+        "type": "array"
+      }
+    ],
+    "name": "food",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "title": "Chef Name"
+      },
+      {
+        "description": "Role or title of the chef (e.g., Head Chef, Sous Chef)",
+        "name": "position",
+        "type": "string"
+      },
+      {
+        "description": "Number of years the chef has worked in the culinary field",
+        "name": "experience",
+        "type": "number",
+        "title": "Years of Experience"
+      },
+      {
+        "description": "Specialization of the chef (e.g., Italian Cuisine, Pastry)",
+        "name": "specialty",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "Chef Image"
+      },
+      {
+        "description": "Short bio or introduction about the chef",
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "description": "Availability status of the chef",
+        "name": "available",
+        "type": "boolean",
+        "title": "Currently Active"
+      }
+    ],
+    "name": "chef",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 3
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "profileImage",
+        "type": "image"
+      },
+      {
+        "name": "createdAt",
+        "type": "datetime"
+      }
+    ],
+    "name": "user",
+    "type": "document"
+  }
+]

@@ -1,168 +1,314 @@
-import Image from 'next/image'
-import React from 'react'
-import { Button } from '@/components/ui/button'
+"use client";
 
-const Shopdetail = () => {
-  return (
-    <div className='bg-white'>
-      {/* Main content */}
-      <div className="max-w-[1320px] h-[718px] mx-auto mt-[130px] flex flex-col md:flex-row ">
-      {/* Left images */}
-      <div className="flex flex-col md:ml-0 ml-[80px] gap-4 mr-4">
-  {[1, 2, 3, 4].map((img, index) => (
-    <Image
-      key={index}
-      src={`/shop-detail/slide${img}.png`} // Updated to match your request
-      alt={`Image ${img}`}
-      width={132} height={129}
-      className=" md:w-[132px] md:h-[129px] w-[200px] h-[200px] rounded-[6px] border-2"
-    />
-  ))}
-</div>
+import Image from "next/image";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { urlFor } from "@/sanity/lib/image";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/lib/features/carts/cartsSlice";
+import Link from "next/link";
+import { MdFacebook } from "react-icons/md";
+import { RiYoutubeFill, RiInstagramFill } from "react-icons/ri";
+import { SiVk } from "react-icons/si";
+import { AiFillTwitterCircle } from "react-icons/ai";
+import { Heart, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { client } from "@/sanity/lib/client";
 
-
-      {/* Large image */}
-      <div className="m-[30px] md:mr-4">
-        <Image
-          src="/shop-detail/slidebgpic.png"
-          alt="Large Image"
-          width={491} height={596}
-          className=" rounded-[6px]"
-        />
-      </div>
-
-      {/* Details section */}
-      <div className="flex-1">
-        {/* In stock and navigation */}
-        <div className="flex items-center mb-4">
-          <span className="bg-[#FF9F0D] text-white px-4 py-1 rounded-full">In stock</span>
-          <div className="flex items-center ml-4 gap-4">
-            <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 cursor-pointer"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-              <span>Prev</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>Next</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 cursor-pointer"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* Heading */}
-        <h1 className="font-bold text-[48px] leading-[56px] mb-2">Yummy Chicken Chup</h1>
-
-        {/* Paragraph */}
-        <p className="text-[18px] leading-[26px] mb-4 max-w-[608px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque diam pellentesque bibendum non dui volutpat fringilla bibendum. Urna, urna, vitae feugiat pretium donec id elementum. Ultrices mattis sed vitae mus risus. Lacus nisi, et ac dapibus sit eu velit in consequat.
-        </p>
-
-        {/* Horizontal line */}
-        <hr className="mb-4" />
-
-        {/* Price and rating */}
-        <div className="flex items-center mb-4">
-          <span className="font-bold text-[32px] leading-[40px] mr-4">54.00$</span>
-          <div className="flex items-center text-[16px] leading-[24px]">
-            <div className="flex items-center text-[#FF9F0D] mr-2">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4"
-                >
-                  <path d="M12 .587l3.668 7.125 7.864 1.151-5.691 5.548 1.342 7.829L12 18.896l-7.183 3.744 1.342-7.829-5.691-5.548 7.864-1.151z" />
-                </svg>
-              ))}
-            </div>
-            <span className="text-gray-600">| 5.0 Rating</span>
-            <span className="text-gray-600 mx-2">|</span>
-            <span className="text-gray-600">22 Review</span>
-          </div>
-        </div>
-
-        {/* Quantity and Add to Cart */}
-        <div className="flex items-center gap-4 mb-4">
-          <div className="flex items-center gap-2">
-            <Button className="px-4 py-2 border">-</Button>
-            <span>1</span>
-            <Button className="px-4 py-2 border">+</Button>
-          </div>
-          <Button className="bg-[#FF9F0D] text-white px-6 py-2 rounded">Add to Cart</Button>
-        </div>
-
-        {/* Horizontal line */}
-        <hr className="mb-4" />
-
-        {/* Wishlist and Compare */}
-        <div className="flex items-center mb-4">
-          <div className="flex items-center gap-2 cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M20.84 4.61a5.5 5.5 0 00-7.78 0l-.56.57-.56-.57a5.5 5.5 0 00-7.78 7.78l8.34 8.33 8.34-8.33a5.5 5.5 0 000-7.78z"
-              />
-            </svg>
-            <span>WishList</span>
-          </div>
-          <span className="mx-4">|</span>
-          <span className="cursor-pointer">Compare</span>
-        </div>
-
-        {/* Category and Tags */}
-        <p className="mb-2">Category: Pizza</p>
-        <p className="mb-2">Tag: Our shop</p>
-
-        {/* Share Icons */}
-        <div className="flex items-center gap-4 mb-4">
-          <span>Share:</span>
-          {["facebook", "twitter", "instagram", "linkedin", "pinterest"].map((icon, i) => (
-            <svg
-              key={i}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              className="w-6 h-6"
-            >
-              {/* Replace this with specific social media SVGs */}
-              <circle cx="12" cy="12" r="10" />
-            </svg>
-          ))}
-        </div>
-
-        {/* Horizontal line */}
-        <hr />
-      </div>
-    </div>
-    </div>
-  )
+interface Product {
+  name: string;
+  slug: { current: string };
+  category: string;
+  price: number;
+  originalPrice: number;
+  tags: string[];
+  image: { asset: { _ref: string } };
+  description: string;
+  available: boolean;
+  rating?: number;
+  reviews?: {
+    reviewer: string;
+    comment: string;
+    rating: number;
+    date: string;
+  }[];
+  relatedProducts?: {
+    name: string;
+    slug: { current: string };
+    image: { asset: { _ref: string } };
+  }[];
 }
 
-export default Shopdetail
+interface ShopdetailProps {
+  product: Product;
+
+  reviews?: {
+
+    reviewer: string;
+
+    comment: string;
+
+    rating: number;
+
+    date: string;
+
+  }[];
+}
+const Shopdetail: React.FC<ShopdetailProps> = ({ product }) => {
+  const [nextProduct, setNextProduct] = useState<Product | null>(null);
+  const [prevProduct, setPrevProduct] = useState<Product | null>(null);
+
+  React.useEffect(() => {
+    const fetchNextPrevProducts = async () => {
+      const query = `*[_type == "food"] | order(_createdAt asc) {
+      name,
+      slug,
+      category,
+      price,
+      originalPrice,
+      tags,
+      image,
+      description,
+      available
+       reviews[]
+    }`;
+
+      const products: Product[] = await client.fetch(query);
+
+      const currentIndex = products.findIndex(
+        (p) => p.slug.current === product.slug.current
+      );
+
+      if (currentIndex > 0) {
+        setPrevProduct(products[currentIndex - 1]);
+      }
+
+      if (currentIndex < products.length - 1) {
+        setNextProduct(products[currentIndex + 1]);
+      }
+    };
+
+    fetchNextPrevProducts();
+  }, [product.slug]);
+
+  const [quantity, setQuantity] = useState(1);
+  const [selectedImage] = useState(product.image); // Track selected image
+  const [isWishlisted, setIsWishlisted] = useState(false); // Track wishlist state
+  const dispatch = useDispatch();
+
+  const handleIncrement = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: Date.now(),
+      name: product.name,
+      srcUrl: urlFor(selectedImage).url(), // Use the selected image
+      price: product.price,
+      attributes: [],
+      discount: { amount: 0, percentage: 0 },
+      quantity: quantity,
+    };
+    dispatch(addToCart(cartItem));
+  };
+
+  const handleWishlist = () => {
+    setIsWishlisted(!isWishlisted); // Toggle wishlist state
+  };
+
+  const handleShare = (platform: string) => {
+    const url = window.location.href;
+    let shareUrl = "";
+
+    switch (platform) {
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`;
+        break;
+      case "instagram":
+        shareUrl = `https://www.instagram.com/?url=${encodeURIComponent(url)}`;
+        break;
+      case "vk":
+        shareUrl = `https://vk.com/share.php?url=${encodeURIComponent(url)}`;
+        break;
+      case "youtube":
+        shareUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(url)}`;
+        break;
+      default:
+        break;
+    }
+
+    window.open(shareUrl, "_blank");
+  };
+
+  return (
+    <div className="bg-white">
+      {/* Main content */}
+      <div className="max-w-[1320px] mx-auto mt-[130px] flex flex-col md:flex-row gap-8 p-4">
+        {/* Left side - Images */}
+        <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-4">
+          {/* Small images (30% width) */}
+          <div className="w-full md:w-1/3 flex flex-row md:flex-col gap-4">
+            {product.relatedProducts?.map((relatedProduct, index) => (
+              <Link
+                key={index}
+                href={`/shop/${relatedProduct.slug.current}`}
+                className="cursor-pointer border-2 w-[132px] h-[100px] rounded-xl  hover:border-[#FF9F0D] transition-all justify-self-center self-center"
+              >
+                <Image
+                  src={urlFor(relatedProduct.image).url()}
+                  alt={`Related Product ${index + 1}`}
+                  width={132}
+                  height={100}
+                  className="w-[132px] h-[100px] rounded-xl object-cover justify-self-center self-center  "
+                />
+              </Link>
+            ))}
+          </div>
+
+          {/* Large image (70% width) */}
+          <div className="w-full h-auto justify-self-center self-center rounded-xl border-4 hover:border-[#FF9F0D] transition-all">
+            <Image
+              src={urlFor(selectedImage).url()}
+              alt="Large Image"
+              width={520}
+              height={450}
+              className="w-[520px] h-[450px] rounded-xl"
+            />
+          </div>
+        </div>
+
+        {/* Right side - Details */}
+        <div className="w-full  md:w-1/2 space-y-6">
+          {/* In stock and navigation */}
+          <div className="flex items-center justify-between">
+            <span className="bg-[#FF9F0D] text-white px-4 py-1 rounded-full">
+              {product.available ? "In stock" : "Out of stock"}
+            </span>
+            <div className="flex items-center gap-4">
+              {prevProduct && (
+                <Link
+                  href={`/shop/${prevProduct.slug.current}`}
+                  className="flex items-center gap-2"
+                >
+                  <ChevronLeft className="w-6 h-6 cursor-pointer" />
+                  <span>Prev</span>
+                </Link>
+              )}
+              {nextProduct && (
+                <Link
+                  href={`/shop/${nextProduct.slug.current}`}
+                  className="flex items-center gap-2"
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-6 h-6 cursor-pointer" />
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {/* Heading */}
+          <h1 className="font-bold text-4xl">{product.name}</h1>
+
+          {/* Paragraph */}
+          <p className="text-lg text-gray-600">{product.description}</p>
+
+          {/* Horizontal line */}
+          <hr />
+
+          {/* Price and rating */}
+          <div className="flex items-center gap-4">
+            <span className="font-bold text-3xl">${product.price}</span>
+            <div className="flex items-center gap-2 text-gray-600">
+              <div className="flex items-center text-[#FF9F0D]">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-5 h-5 ${i < (product.rating || 0) ? "text-[#FF9F0D]" : "text-gray-300"}`}
+                  />
+                ))}
+              </div>
+              <span>{product.rating?.toFixed(1)} Rating</span>
+              <span>|</span>
+              <span> {product.reviews?.length .toFixed(1)} Review </span>
+            </div>
+          </div>
+
+          {/* Quantity and Add to Cart */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 border rounded-lg p-2">
+              <Button variant="ghost" onClick={handleDecrement}>
+                -
+              </Button>
+              <span>{quantity}</span>
+              <Button variant="ghost" onClick={handleIncrement}>
+                +
+              </Button>
+            </div>
+            <Button
+              className="bg-[#FF9F0D] hover:bg-[#e68906] text-white px-6 py-2 rounded-lg"
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </Button>
+          </div>
+
+          {/* Horizontal line */}
+          <hr />
+
+          {/* Wishlist and Compare */}
+          <div className="flex items-center gap-4">
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={handleWishlist}
+            >
+              <Heart
+                className={`w-6 h-6 ${isWishlisted ? "text-red-500" : "text-gray-600"}`}
+              />
+              <span>Wishlist</span>
+            </div>
+            <span>|</span>
+            <span className="cursor-pointer">Compare</span>
+          </div>
+
+          {/* Share Icons */}
+          <div className="flex items-center gap-4">
+            <span>Share:</span>
+            <div className="flex gap-4">
+              <MdFacebook
+                className="w-6 h-6 text-gray-600 hover:text-[#FF9F0D] cursor-pointer"
+                onClick={() => handleShare("facebook")}
+              />
+              <AiFillTwitterCircle
+                className="w-6 h-6 text-gray-600 hover:text-[#FF9F0D] cursor-pointer"
+                onClick={() => handleShare("twitter")}
+              />
+              <RiInstagramFill
+                className="w-6 h-6 text-gray-600 hover:text-[#FF9F0D] cursor-pointer"
+                onClick={() => handleShare("instagram")}
+              />
+              <SiVk
+                className="w-6 h-6 text-gray-600 hover:text-[#FF9F0D] cursor-pointer"
+                onClick={() => handleShare("vk")}
+              />
+              <RiYoutubeFill
+                className="w-6 h-6 text-gray-600 hover:text-[#FF9F0D] cursor-pointer"
+                onClick={() => handleShare("youtube")}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Shopdetail;
