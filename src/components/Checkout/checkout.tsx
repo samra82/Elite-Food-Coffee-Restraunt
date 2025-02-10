@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 import { Button } from "../ui/button";
@@ -16,13 +16,13 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+
 import { Label } from "../ui/label";
 import { useForm ,  Controller} from "react-hook-form";
 import { urlFor } from "@/sanity/lib/image";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { client } from "@/sanity/lib/client";
 import { toast } from "react-hot-toast";
 
 interface CartItem {
@@ -68,18 +68,18 @@ const Checkout: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isSameAsShipping) {
-      setValue("billingAddress", "same-as-shipping");
-    } else {
-      setValue("billingAddress", "");
-    }
+    setValue("billingAddress", isSameAsShipping ? "same-as-shipping" : "");
   }, [isSameAsShipping, setValue]);
 
-  const saveCartToLocalStorage = () => {
+  const saveCartToLocalStorage = useCallback(() => {
     if (cart) {
       localStorage.setItem("selectedProducts", JSON.stringify(cart.items));
     }
-  };
+  }, [cart]);
+
+  useEffect(() => {
+    saveCartToLocalStorage();
+  }, [cart]);
 
  const onSubmit = async (data: FormData) => {
   if (!cart || cart.items.length === 0) {
@@ -262,7 +262,7 @@ const Checkout: React.FC = () => {
     Country
   </Label>
   <Controller
-    control={control}  // make sure to extract control from useForm
+    control={control}
     name="country"
     rules={{ required: "Country is required" }}
     render={({ field }) => (

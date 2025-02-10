@@ -28,10 +28,15 @@ export default function SignUpPage() {
         setError("User email is null");
       }
       router.push("/shop");
-    } catch (error: any) {
-      setError(error.message);
     }
+     catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
   };
+}
 
   const handleGoogleSignUp = async () => {
     try {
@@ -39,9 +44,13 @@ export default function SignUpPage() {
       const user = userCredential.user;
       await saveUserToSanity({ name: user.displayName || "", email: user.email || "" });
       router.push("/shop");
-    } catch (error: any) {
-      setError(error.message);
-    }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
+  };
   };
 
   return (

@@ -1,4 +1,3 @@
-// app/Auth/login/page.tsx
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,8 +19,12 @@ export default function LoginPage() {
     try {
       await signInWithEmail(email, password);
       router.push("/shop");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -29,8 +32,12 @@ export default function LoginPage() {
     try {
       await signInWithGoogle();
       router.push("/shop");
-    } catch (error: any) {
-      setError(error.message);
+    }  catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -68,7 +75,7 @@ export default function LoginPage() {
               </Button>
               {error && <p className="text-red-500 text-center mt-4">{error}</p>}
               <p className="text-center mt-4">
-                Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
                 <Link href="/Auth/signup" className="text-yellow-500 hover:text-blue-500">
                   Sign Up
                 </Link>
