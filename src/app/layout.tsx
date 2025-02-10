@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Providers from "./Redux Provider";
+import { ReactNode } from "react";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
