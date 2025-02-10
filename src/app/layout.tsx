@@ -1,7 +1,9 @@
+import { Analytics } from "@vercel/analytics/react"
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Providers from "./Redux Provider";
 
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -32,6 +34,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
+          <Analytics />
           <Navbar />
           {children}
         </Providers>

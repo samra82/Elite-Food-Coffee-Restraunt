@@ -262,5 +262,58 @@
     ],
     "name": "user",
     "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "firstName",
+        "type": "string"
+      },
+      {
+        "name": "lastName",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "quantity",
+                "type": "number"
+              },
+              {
+                "name": "price",
+                "type": "number"
+              },
+              {
+                "name": "image",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "items",
+        "type": "array"
+      },
+      {
+        "name": "total",
+        "type": "number"
+      },
+      {
+        "name": "createdAt",
+        "type": "datetime"
+      }
+    ],
+    "name": "order",
+    "type": "document"
   }
 ]

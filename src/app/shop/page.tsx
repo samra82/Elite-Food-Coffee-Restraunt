@@ -5,8 +5,7 @@ import { client } from '@/sanity/lib/client';
 import ProductListing from '@/components/ShopPages/ProductListing';
 import Sidebar from '@/components/ShopPages/Sidebar';
 import Hero from '@/components/ShopPages/ShopHero';
-import { useRouter } from 'next/navigation';
-import useAuth from "@/lib/useAuth";
+import { useAuth } from '@/lib/useAuth'; // Use authentication hook for user object
 
 interface Product {
   name: string;
@@ -21,29 +20,15 @@ interface Product {
 }
 
 export default function ShopPage() {
-  const { user } = useAuth();
-  const router = useRouter();
-  const [loading, setLoading] = useState(true); // Add a loading state
-
-  // Redirect to login/signup if the user is not authenticated
-  useEffect(() => {
-    if (!user) {
-     <div>Loading .....</div> ;
-    } else {
-      setLoading(false); // Set loading to false once the user is authenticated
-    }
-  }, [user, router]);
-
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [priceRange, setPriceRange] = useState({ min: 0, max: 8000 });
+  const { user } = useAuth(); // Get the authenticated user
 
   // Fetch products from Sanity
   useEffect(() => {
-    if (!user) return; // Don't fetch products if the user is not authenticated
-
     const fetchProducts = async () => {
       const query = `*[_type == "food"]{
         name,
@@ -61,7 +46,7 @@ export default function ShopPage() {
       setFilteredProducts(products); // Initialize filtered products with all products
     };
     fetchProducts();
-  }, [user]);
+  }, []);
 
   // Apply all filters
   const applyFilters = (query: string, category: string, priceRange: { min: number; max: number }) => {
@@ -105,15 +90,15 @@ export default function ShopPage() {
     applyFilters(searchQuery, selectedCategory, { min, max });
   };
 
-  // Show a loading state while checking authentication
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="bg-grey-900">
       <Hero />
       <div className="bg-gray-50 min-h-screen py-8">
+        {user ? (
+          <h2 className="text-green-600 mb-4">Enjoy Your Meal</h2>
+        ) : (
+          <p className="text-red-600 mb-4">Please log in.</p>
+        )}
         <div className="container mx-auto px-4 flex flex-col lg:flex-row gap-8">
           {/* Product Listing (Left Side) */}
           <div className="flex-grow">

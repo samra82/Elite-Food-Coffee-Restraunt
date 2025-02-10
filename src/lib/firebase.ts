@@ -1,6 +1,7 @@
 // lib/firebase.ts
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
+
 // Firebase configuration 
 const firebaseConfig = {
     apiKey: "AIzaSyBTmVgge0nxyNlSUtSZQrfbBrgTpKwbeZ4",
@@ -12,31 +13,26 @@ const firebaseConfig = {
     measurementId: "G-MT0D8J173X"
   };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Get Firebase auth instance
-const auth = getAuth(app);
-
-// Google provider setup
-const googleProvider = new GoogleAuthProvider();
-
-// Email and Password Auth
-export const signUpWithEmail = (email: string, password: string) =>
-  createUserWithEmailAndPassword(auth, email, password);
-
-export const signInWithEmail = (email: string, password: string) =>
-  signInWithEmailAndPassword(auth, email, password);
-
-export const signUpWithGoogle = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    return result;
-  } catch (error) {
-    console.error("Error signing up with Google:", error);
-    throw error;
-  }
-};
-
-
-export default auth;
+  const app = initializeApp(firebaseConfig);
+  export const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+  
+  // Sign up with email and password
+  export const signUpWithEmail = async (email: string, password: string) => {
+    return await createUserWithEmailAndPassword(auth, email, password);
+  };
+  
+  // Sign in with email and password
+  export const signInWithEmail = async (email: string, password: string) => {
+    return await signInWithEmailAndPassword(auth, email, password);
+  };
+  
+  // Sign in with Google
+  export const signInWithGoogle = async () => {
+    return await signInWithPopup(auth, googleProvider);
+  };
+  
+  // Get current user
+  export const getCurrentUser = (): User | null => {
+    return auth.currentUser;
+  };

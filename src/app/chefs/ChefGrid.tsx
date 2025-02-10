@@ -1,22 +1,42 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { client } from "@/sanity/lib/client";// Import the Sanity client
+import { urlFor } from "@/sanity/lib/image";
 
-const chefs = [
-  { name: "Tahmina Rumi", role: "Chef", image: "/pic1 (1).png" },
-  { name: "Jorina Begum", role: "Chef", image: "/pic2 (1).png" },
-  { name: "M. Mohammad", role: "Chef", image: "/pic3 (1).png" },
-  { name: "Munna Kathy", role: "Chef", image: "/pic4 (1).png" },
-  { name: "Tahmina Rumi", role: "Cook", image: "/pic5 (1).png" },
-  { name: "Bisnu Devgon", role: "Chef", image: "/pic6 (1).png" },
-  { name: "Motin Molladst", role: "Chef", image: "/pic7 (1).png" },
-  { name: "William Rumi", role: "Chef", image: "/pic8 (1).png" },
-  { name: "Kets William Roy", role: "Chef", image: "/pic9 (1).png" },
-  { name: "Mahmud Kholil", role: "Chef", image: "/pic10 (1).png" },
-  { name: "Ataur Rahman", role: "Chef", image: "/pic11 (1).png" },
-  { name: "Monalisa Holly", role: "Chef", image: "/pic12 (1).png" },
-];
+// Define the Chef interface
+interface Chef {
+  name: string;
+  position: string;
+  experience: number;
+  specialty: string;
+  image: string; 
+  description: string;
+  available: boolean;
+}
 
 const ChefGrid = () => {
+  const [chefs, setChefs] = useState<Chef[]>([]); // Explicitly type the state
+
+  useEffect(() => {
+    const fetchChefs = async () => {
+      const query = `*[_type == "chef"]{
+        name,
+        position,
+        experience,
+        specialty,
+        "image": image.asset->url,
+        description,
+        available
+      }`;
+
+      const chefsData: Chef[] = await client.fetch(query); // Explicitly type the fetched data
+      setChefs(chefsData);
+    };
+
+    fetchChefs();
+  }, []);
+
   return (
     <div className="p-6 mt-20">
       {" "}
@@ -35,19 +55,19 @@ const ChefGrid = () => {
             {/* Chef Image */}
             <div className="flex-1">
               <Image
-                src={chef.image}
+                src={urlFor(chef.image).quality(80).url()}
                 alt={chef.name}
-                width={60}
-                height={40}
+                width={300}
+                height={500}
                 priority
-                className="w-full h-full object-cover rounded-t-lg"
+                className="w-full h-auto object-cover rounded-t-lg"
               />
             </div>
 
             {/* Static Information Section Below Image */}
             <div className="p-4 text-center">
               <h3 className="text-gray-800 font-bold text-lg">{chef.name}</h3>
-              <p className="text-gray-600">{chef.role}</p>
+              <p className="text-gray-600">{chef.position}</p>
             </div>
           </div>
         ))}

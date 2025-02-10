@@ -1,18 +1,18 @@
 // components/Navbar.tsx
-'use client';
-
-import { useState } from 'react';
-import Link from 'next/link';
-import { Menu, X, Search, User } from 'lucide-react';
-import { Button } from './ui/button';
-import CartButton from './cart/CartButton';
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { Menu, X, Search } from "lucide-react";
+import { Button } from "../ui/button";
+import CartButton from "../cart/CartButton";
+import ProfileIcon from "./ProfileIcon";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
     { name: "Home", href: "/", active: true },
-    { name: "Menu", href: "/menu" },
+    { name: "Menu", href: "/Menu" },
     { name: "Blog", href: "/blog" },
     { name: "Pages", href: "/pages" },
     { name: "About", href: "/about" },
@@ -27,7 +27,7 @@ export default function Navbar() {
       <nav className="flex items-center justify-between relative">
         {/* Logo */}
         <Link
-          href="/src/app/favicon.ico"
+          href="/"
           className="text-[20px] sm:text-[24px] leading-[32px] font-bold text-white z-50"
         >
           Food<span className="text-[#FF9F0D]">tuck</span>
@@ -44,15 +44,18 @@ export default function Navbar() {
         </Button>
 
         {/* Navigation Links */}
-        <div className={`
-          fixed inset-0 bg-[#0D0D0D] flex flex-col items-center justify-center gap-6
-          lg:static lg:flex-row lg:bg-transparent lg:gap-[32px]
-          transition-all duration-300 ease-in-out
-          ${isMenuOpen 
-            ? 'opacity-100 visible translate-x-0' 
-            : 'opacity-0 invisible translate-x-full lg:translate-x-0 lg:opacity-100 lg:visible'}
-          absolute top-0 left-0 w-full h-screen lg:h-auto
-        `}>
+        <div
+          className={`
+            fixed inset-0 bg-[#0D0D0D] flex flex-col items-center justify-center gap-6
+            lg:static lg:flex-row lg:bg-transparent lg:gap-[32px]
+            transition-all duration-300 ease-in-out
+            ${isMenuOpen
+              ? 'opacity-100 visible translate-x-0'
+              : 'opacity-0 invisible translate-x-full lg:translate-x-0 lg:opacity-100 lg:visible'
+            }
+            absolute top-0 left-0 w-full h-screen lg:h-auto
+          `}
+        >
           <ul className="flex flex-col lg:flex-row items-center gap-6 lg:gap-[32px]">
             {menuItems.map((item) => (
               <li key={item.name} className="w-full lg:w-auto text-center">
@@ -74,9 +77,7 @@ export default function Navbar() {
             <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
               <Search size={24} />
             </Link>
-            <Link href="Auth/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
-              <User size={24} />
-            </Link>
+            <ProfileIcon />
             <CartButton />
           </div>
         </div>
@@ -86,9 +87,7 @@ export default function Navbar() {
           <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
             <Search size={24} />
           </Link>
-          <Link href="/Auth/signup" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="User Profile">
-            <User size={24} />
-          </Link>
+          <ProfileIcon />
           <CartButton />
         </div>
       </nav>
