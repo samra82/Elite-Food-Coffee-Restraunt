@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Providers from "./Redux Provider";
 import { ReactNode } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -38,6 +40,7 @@ export default function RootLayout({
           <Navbar />
           <Analytics />
           {children}
+          <ToastContainer />
         </Providers>
         <Footer />
       </body>

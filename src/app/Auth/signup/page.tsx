@@ -7,7 +7,7 @@ import { saveUserToSanity } from "@/lib/sanityClient";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
+import { FcGoogle } from "react-icons/fc";
 import Hero from "./SignupHero";
 
 export default function SignUpPage() {
@@ -108,11 +108,7 @@ export default function SignUpPage() {
                 onClick={handleGoogleSignUp}
                 className="w-full bg-gray-100 border text-black py-2 rounded mt-2 flex items-center justify-center"
               >
-                <Image
-                  src="/google.png"
-                  width={24}
-                  height={24}
-                  alt="Google"
+                <FcGoogle
                   className="w-[20px] h-[20px] left-[16px] mr-2"
                 />
                 Sign up with Google

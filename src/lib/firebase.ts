@@ -1,6 +1,8 @@
 // lib/firebase.ts
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User , signOut} from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { updatePassword } from "firebase/auth";
 
 // Firebase configuration 
 const firebaseConfig = {
@@ -31,8 +33,23 @@ const firebaseConfig = {
   export const signInWithGoogle = async () => {
     return await signInWithPopup(auth, googleProvider);
   };
-  
+
+  // Logout
+  export const logout = async () => {
+    return await signOut(auth);
+  };
+
   // Get current user
   export const getCurrentUser = (): User | null => {
     return auth.currentUser;
   };
+
+  // Initialize Firebase Storage
+export const storage = getStorage(app);
+
+// Update password
+export const updateUserPassword = async (newPassword: string) => {
+  if (auth.currentUser) {
+    await updatePassword(auth.currentUser, newPassword);
+  }
+};

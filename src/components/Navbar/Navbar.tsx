@@ -15,9 +15,9 @@ export default function Navbar() {
     { name: "Menu", href: "/Menu" },
     { name: "Blog", href: "/blog" },
     { name: "Pages", href: "/pages" },
-    { name: "About", href: "/about" },
+    { name: "About", href: "/About" },
     { name: "Shop", href: "/shop" },
-    { name: "Contact", href: "/contact" },
+    { name: "Contact", href: "/Contact" },
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -83,7 +83,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Icons */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex items-center  gap-4 ">
           <Link href="#" className="text-white hover:text-[#FF9F0D] transition-colors" aria-label="Search">
             <Search size={24} />
           </Link>
