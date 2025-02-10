@@ -79,7 +79,7 @@ const Checkout: React.FC = () => {
 
   useEffect(() => {
     saveCartToLocalStorage();
-  }, [cart]);
+  }, [cart, saveCartToLocalStorage]);
 
  const onSubmit = async (data: FormData) => {
   if (!cart || cart.items.length === 0) {
