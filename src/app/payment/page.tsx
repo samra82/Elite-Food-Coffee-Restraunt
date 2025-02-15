@@ -1,198 +1,274 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { urlFor } from '@/sanity/lib/image';
-import { motion } from 'framer-motion';
-import Hero from './paymentHero';
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
+import { useRouter } from "next/navigation";
 
-interface Product {
-  id: string;
+interface CartItem {
+  _id: string;
   name: string;
-  price: number;
   quantity: number;
+  price: number;
   srcUrl: string;
 }
 
-const PaymentPage = () => {
-  const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [totalAmount, setTotalAmount] = useState<number>(0);
+interface Cart {
+  items: CartItem[];
+}
+
+const PaymentPage: React.FC = () => {
+  const router = useRouter(); // Initialize useRouter
+
+  // Grab cart from Redux
+  const cart = useSelector((state: RootState) => state.carts.cart) as Cart | null;
+
+  // Payment form states
+  const [paymentMethod, setPaymentMethod] = useState<string>("card");
+  const [nameOnCard, setNameOnCard] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
+
+  // For handling loading and response messages
   const [loading, setLoading] = useState(false);
-  const [cardInfo, setCardInfo] = useState({
-    number: '',
-    expiry: '',
-    cvv: '',
-  });
-  const [userName, setUserName] = useState('');
-  const [, setTxnRefNo] = useState('');
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const savedProducts = JSON.parse(localStorage.getItem('selectedProducts') || '[]');
-    setProducts(savedProducts);
-    const total = savedProducts.reduce((acc: number, p: Product) => acc + (p.price * p.quantity), 0);
-    setTotalAmount(total);
-    setTxnRefNo("T" + Date.now());
-  }, []);
+  // Calculate cart totals
+  const subtotal = cart?.items.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
+  const shipping = 0;    // or set your shipping cost
+  const tax = 54.76;     // example tax
+  const total = subtotal + shipping + tax;
 
-  const handlePaymentSubmit = async (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate payment processing
-    setTimeout(() => {
+    setMessage("");
+
+    try {
+      // Send total and chosen payment method to API
+      const res = await fetch("/api/payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ amount: total, paymentMethod }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        // Redirect to success page
+        router.push("/payment/success"); // Adjust the path as needed
+      } else {
+        setMessage(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      setMessage("Something went wrong.");
+    } finally {
       setLoading(false);
-      router.push('/success');
-    }, 2000);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <Hero />
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Order Summary */}
+      {/* Use flex-col on mobile, flex-row on larger screens */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Payment Form Section */}
         <motion.div
-          className="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm order-2 lg:order-1"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Order Summary</h2>
-          <div className="space-y-5">
-            {products.length > 0 ? (
-              products.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  className="flex items-start gap-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className="relative w-20 h-20 flex-shrink-0">
-                    <Image
-                      src={urlFor(product.srcUrl).url()}
-                      alt={product.name}
-                      fill
-                      className="rounded-lg object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-800">{product.name}</h3>
-                    <p className="text-sm text-gray-500">
-                      Qty: {product.quantity}
-                    </p>
-                    <p className="text-[#ff9f0d] font-semibold">
-                      PKR {(product.price * product.quantity).toFixed(2)}
-                    </p>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-gray-500">No products selected.</p>
-            )}
-          </div>
-
-          <div className="mt-8 space-y-3 border-t pt-4">
-            <div className="flex justify-between text-gray-600">
-              <span>Subtotal</span>
-              <span>PKR {totalAmount.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span>Shipping</span>
-              <span className="text-green-500">Free</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span>Tax</span>
-              <span>PKR 54.76</span>
-            </div>
-            <div className="flex justify-between font-bold text-lg text-gray-800 pt-2">
-              <span>Total</span>
-              <span>PKR {(totalAmount + 54.76).toFixed(2)}</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Payment Form */}
-        <motion.div
-          className="lg:col-span-2 bg-white p-6 md:p-8 rounded-xl shadow-sm order-1 lg:order-2"
+          className="w-full md:w-2/3"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold mb-8 text-gray-800">Payment Details</h2>
-          <form onSubmit={handlePaymentSubmit} className="space-y-6 max-w-xl">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cardholder Name
-              </label>
-              <input
-                type="text"
-                required
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff9f0d] focus:border-[#ff9f0d] outline-none transition"
-                placeholder="John Doe"
-              />
-            </div>
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold">Payment</CardTitle>
+              <CardDescription>Select a payment method</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handlePayment} className="space-y-6">
+                {/* Google Pay Button */}
+                <Button
+                  variant="outline"
+                  className="bg-white text-black w-full py-3 border-gray-300 hover:bg-gray-100"
+                  onClick={() => setPaymentMethod("google-pay")}
+                  type="button"
+                >
+                  Google Pay
+                </Button>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Card Number
-              </label>
-              <input
-                type="text"
-                required
-                value={cardInfo.number}
-                onChange={(e) => setCardInfo({ ...cardInfo, number: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff9f0d] focus:border-[#ff9f0d] outline-none transition"
-                placeholder="4242 4242 4242 4242"
-              />
-            </div>
+                {/* Credit Card Section */}
+                <div className="border rounded-md p-4">
+                  <div className="flex items-center mb-4">
+                    <input
+                      type="radio"
+                      id="card"
+                      name="paymentOption"
+                      checked={paymentMethod === "card"}
+                      onChange={() => setPaymentMethod("card")}
+                      className="mr-2"
+                    />
+                    <label htmlFor="card" className="font-medium text-gray-700">
+                      Pay with Card
+                    </label>
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Expiration Date (MM/YY)
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={cardInfo.expiry}
-                  onChange={(e) => setCardInfo({ ...cardInfo, expiry: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff9f0d] focus:border-[#ff9f0d] outline-none transition"
-                  placeholder="12/25"
-                />
+                  {paymentMethod === "card" && (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Name on card
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="John Doe"
+                          value={nameOnCard}
+                          onChange={(e) => setNameOnCard(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Card number
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="XXXX XXXX XXXX XXXX"
+                          value={cardNumber}
+                          onChange={(e) => setCardNumber(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="flex space-x-4">
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Expiry date
+                          </label>
+                          <Input
+                            type="text"
+                            placeholder="MM/YY"
+                            value={expiry}
+                            onChange={(e) => setExpiry(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Security code (CVV)
+                          </label>
+                          <Input
+                            type="text"
+                            placeholder="123"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Submit Payment Button */}
+                <Button
+                  type="submit"
+                  className="w-1/2 mt-4 bg-[#ff9f0d] hover:bg-[#e08c0b] text-white "
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </> 
+                  ) : (
+                    "Pay"
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+
+            {/* Success/Error Message */}
+            {message && (
+              <CardFooter className="flex justify-center">
+                <p
+                  className={`text-sm ${
+                    message.includes("successful") ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {message}
+                </p>
+              </CardFooter>
+            )}
+          </Card>
+        </motion.div>
+
+        {/* Order Summary Section */}
+        <motion.div
+          className="w-full md:w-1/3"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold">Order Summary</CardTitle>
+              <CardDescription>Review your items</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {cart?.items.map((item) => (
+                  <div key={item._id} className="flex items-start space-x-4">
+                    <div className="relative w-16 h-16">
+                      <Image
+                        src={urlFor(item.srcUrl).url()}
+                        alt={item.name}
+                        fill
+                        className="object-cover rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-800">
+                        {item.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Qty: {item.quantity}
+                      </p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  CVV
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={cardInfo.cvv}
-                  onChange={(e) => setCardInfo({ ...cardInfo, cvv: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff9f0d] focus:border-[#ff9f0d] outline-none transition"
-                  placeholder="123"
-                />
-              </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#ff9f0d] hover:bg-[#e08c0b] text-white py-3 px-6 rounded-lg font-medium transition-colors duration-300"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                    {/* Loading spinner SVG */}
-                  </svg>
-                  Processing...
-                </span>
-              ) : (
-                "Confirm Payment"
-              )}
-            </button>
-          </form>
+              {/* Totals */}
+              <div className="mt-4 border-t pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Shipping</span>
+                  <span className="text-green-500">Free</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Tax</span>
+                  <span>${tax.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between font-bold text-lg">
+                  <span>Total</span>
+                  <span>${total.toFixed(2)}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
       </div>
     </div>

@@ -16,9 +16,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-
 import { Label } from "../ui/label";
-import { useForm ,  Controller} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { urlFor } from "@/sanity/lib/image";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -58,7 +57,7 @@ const Checkout: React.FC = () => {
     register,
     handleSubmit,
     setValue,
-    control, 
+    control,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -81,55 +80,61 @@ const Checkout: React.FC = () => {
     saveCartToLocalStorage();
   }, [cart, saveCartToLocalStorage]);
 
- const onSubmit = async (data: FormData) => {
-  if (!cart || cart.items.length === 0) {
-    toast.error("Your cart is empty. Please add products before checking out.");
-    return;
-  }
-
-  setLoading(true);
-  const loadingToast = toast.loading("Processing your order...");
-
-  try {
-    const orderData = {
-      _type: "order",
-      ...data,
-      items: cart.items.map((item) => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        image: item.srcUrl,
-      })),
-      total: cart.items
-        .reduce((sum, item) => sum + item.price * item.quantity, 0)
-        .toFixed(2),
-      createdAt: new Date().toISOString(),
-    };
-
-    const response = await fetch('/api/createOrder', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderData),
-    });
-    
-
-    if (!response.ok) {
-      throw new Error('Failed to process order.');
+  const onSubmit = async (data: FormData) => {
+    if (!cart || cart.items.length === 0) {
+      toast.error(
+        "Your cart is empty. Please add products before checking out."
+      );
+      return;
     }
-    const result = await response.json();
-    console.log('Order saved:', result);
-    toast.success("Order processed successfully!", { id: loadingToast });
-    router.push('/payment');
-  } catch (error) {
-    console.error("Error saving order:", error);
-    toast.error("Failed to process order. Please try again.", { id: loadingToast });
-  } finally {
-    setLoading(false);
-  }
-};
 
+    setLoading(true);
+    const loadingToast = toast.loading("Processing your order...");
+
+    try {
+      // Save order data to Sanity
+      const orderData = {
+        _type: "order",
+        ...data,
+        items: cart.items.map((item) => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.srcUrl,
+        })),
+        total: cart.items
+          .reduce((sum, item) => sum + item.price * item.quantity, 0)
+          .toFixed(2),
+        createdAt: new Date().toISOString(),
+      };
+
+      const sanityResponse = await fetch("/api/saveOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!sanityResponse.ok) {
+        throw new Error("Failed to save order.");
+      }
+
+      toast.success("Order processed successfully!", {
+        id: loadingToast,
+      });
+
+      // Redirect to payment page
+      router.push("/payment");
+    } catch (error) {
+      console.error("Error processing order:", error);
+      toast.error("Failed to process order. Please try again.", {
+        id: loadingToast,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -258,65 +263,67 @@ const Checkout: React.FC = () => {
 
               {/* Country */}
               <div className="space-y-2">
-  <Label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
-    Country
-  </Label>
-  <Controller
-    control={control}
-    name="country"
-    rules={{ required: "Country is required" }}
-    render={({ field }) => (
-      <Select
-        onValueChange={field.onChange}
-        value={field.value}
-      >
-        <SelectTrigger className="w-full border border-gray-300 focus:ring-1 focus:ring-[#ff9f0d] focus:border-[#ff9f0d]">
-          <SelectValue placeholder="Choose country" />
-        </SelectTrigger>
-        <SelectContent className="bg-white">
-          <SelectItem value="Pakistan">Pakistan</SelectItem>
-          <SelectItem value="Turkey">Turkey</SelectItem>
-          <SelectItem value="USA">USA</SelectItem>
-        </SelectContent>
-      </Select>
-    )}
-  />
-  {errors.country && (
-    <span className="text-sm text-red-500">{errors.country.message}</span>
-  )}
-</div>
-
+                <Label
+                  htmlFor="country"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Country
+                </Label>
+                <Controller
+                  control={control}
+                  name="country"
+                  rules={{ required: "Country is required" }}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full border border-gray-300 focus:ring-1 focus:ring-[#ff9f0d] focus:border-[#ff9f0d]">
+                        <SelectValue placeholder="Choose country" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="Pakistan">Pakistan</SelectItem>
+                        <SelectItem value="Turkey">Turkey</SelectItem>
+                        <SelectItem value="USA">USA</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.country && (
+                  <span className="text-sm text-red-500">
+                    {errors.country.message}
+                  </span>
+                )}
+              </div>
 
               {/* City */}
               <div className="space-y-2">
-  <Label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-    City
-  </Label>
-  <Controller
-    control={control}
-    name="city"
-    rules={{ required: "City is required" }}
-    render={({ field }) => (
-      <Select
-        onValueChange={field.onChange}
-        value={field.value}
-      >
-        <SelectTrigger className="w-full border border-gray-300 focus:ring-1 focus:ring-[#ff9f0d] focus:border-[#ff9f0d]">
-          <SelectValue placeholder="Choose city" />
-        </SelectTrigger>
-        <SelectContent className="bg-white">
-          <SelectItem value="Karachi">Karachi</SelectItem>
-          <SelectItem value="Istanbul">Istanbul</SelectItem>
-          <SelectItem value="New York">New York</SelectItem>
-        </SelectContent>
-      </Select>
-    )}
-  />
-  {errors.city && (
-    <span className="text-sm text-red-500">{errors.city.message}</span>
-  )}
-</div>
-
+                <Label
+                  htmlFor="city"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  City
+                </Label>
+                <Controller
+                  control={control}
+                  name="city"
+                  rules={{ required: "City is required" }}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full border border-gray-300 focus:ring-1 focus:ring-[#ff9f0d] focus:border-[#ff9f0d]">
+                        <SelectValue placeholder="Choose city" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="Karachi">Karachi</SelectItem>
+                        <SelectItem value="Istanbul">Istanbul</SelectItem>
+                        <SelectItem value="New York">New York</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.city && (
+                  <span className="text-sm text-red-500">
+                    {errors.city.message}
+                  </span>
+                )}
+              </div>
 
               {/* Zip Code */}
               <div className="space-y-2">
@@ -401,7 +408,6 @@ const Checkout: React.FC = () => {
                   </Label>
                 </div>
               </div>
-
               {/* Navigation buttons */}
               <div className="mt-6 flex flex-col md:flex-row gap-4">
                 <Button
