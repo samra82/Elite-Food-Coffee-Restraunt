@@ -22,6 +22,7 @@ export async function POST(req: Request) {
       status: "success",
     });
   } catch (error) {
+    console.error("Error during payment:", error); 
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
